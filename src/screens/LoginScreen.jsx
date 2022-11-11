@@ -1,29 +1,91 @@
-import { useState } from "react";
-import { View } from "react-native";
-import { Button, Paragraph, TextInput } from "react-native-paper";
+import React, { useState } from "react";
+import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
+import { Button, TextInput } from "react-native-paper";
 
 export const LoginScreen = ({ navigation }) => {
-    const [Usuario, setUsuario] = useState("");
-    const [text, setText] = useState("");
+  const [email, setEmail] = useState({ value: "", error: "" });
+  const [password, setPassword] = useState({ value: "", error: "" });
+
+  const _onLoginPressed = () => {
+    console.log("LoginIniciado");
+    // navigation.navigate("Dashboard");
+  };
+
   return (
-    <View>
-      <Paragraph>Login</Paragraph>
+    <View style={styles.container}>
       <TextInput
-        label="Usuário"
-        value={Usuario}
-        onChangeText={(Usuario) => setUsuario(Usuario)}
+        label="Email"
+        returnKeyType="next"
+        value={email.value}
+        onChangeText={(text) => setEmail({ value: text, error: "" })}
+        error={!!email.error}
+        errorText={email.error}
+        autoCapitalize="none"
+        autoCompleteType="email"
+        textContentType="emailAddress"
+        keyboardType="email-address"
+        style={styles.input}
       />
+
       <TextInput
         label="Senha"
-        value={text}
-        onChangeText={(text) => setText(text)}
+        returnKeyType="done"
+        value={password.value}
+        onChangeText={(text) => setPassword({ value: text, error: "" })}
+        error={!!password.error}
+        errorText={password.error}
+        secureTextEntry
+        style={styles.input}
       />
-      <Button
-        mode="contained"
-        onPress={() => navigation.navigate("HomeNavigation")}
-      >
-        Fazer Login
+
+      <View style={styles.esqueceuSenha}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("EsqueceuSenhaScreen")}
+        >
+          <Text style={styles.label}>Esqueceu sua senha?</Text>
+        </TouchableOpacity>
+      </View>
+
+      <Button mode="contained" onPress={_onLoginPressed}>
+        Login
       </Button>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Não possui uma conta? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("RegisterScreen")}>
+          <Text style={styles.link}>Cadastrar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 24,
+    paddingHorizontal: 26,
+    flex: 1,
+    justifyContent: "center",
+  },
+  esqueceuSenha: {
+    width: "100%",
+    alignItems: "flex-end",
+    marginBottom: 24,
+  },
+  row: {
+    flexDirection: "row",
+    marginTop: 4,
+  },
+  input: {
+    width: "100%",
+  },
+  label: {
+    color: "black",
+  },
+  link: {
+    fontWeight: "bold",
+    color: "black",
+  },
+});
