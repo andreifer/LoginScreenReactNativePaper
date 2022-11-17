@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 26,
     flex: 1,
     justifyContent: "center",
+    backgroundColor: "#93BFB7"
   },
   esqueceuSenha: {
     width: "100%",

@@ -1,6 +1,8 @@
 import { StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { Button, TextInput } from "react-native-paper";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config/firebase";
 
 export const RegisterScreen = ({}) => {
   const [email, setEmail] = useState({ value: "", error: "" });
@@ -14,7 +16,22 @@ export const RegisterScreen = ({}) => {
   const _onRegisterPressed = () => {
     console.log("RegistroIniciado");
     // navigation.navigate("Dashboard");
+
+    if (email.value === "" || password.value === "") {
+      setEmail({ ...email, error: "Entre com um e=mail válido" });
+      setPassword({ ...password, error: "Entre com uma senha" });
+      return false;
+    }
+    CadastrarUsuario();
   };
+
+  async function CadastrarUsuario() {
+    await createUserWithEmailAndPassword(auth, email.value, password.value)
+      .then((value) => {
+        console.log("Cadastrado com sucesso!" + value.user.uid);
+      })
+      .catch((error) => console.log(error));
+  }
 
   return (
     <View style={styles.container}>
@@ -22,13 +39,9 @@ export const RegisterScreen = ({}) => {
         label="Email"
         returnKeyType="next"
         value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: "" })}
+        onChangeText={(text) => setEmail({ value: "", error: "" })}
         error={!!email.error}
         errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
         style={styles.input}
       />
 
@@ -36,13 +49,9 @@ export const RegisterScreen = ({}) => {
         label="Usuário"
         returnKeyType="next"
         value={user.value}
-        onChangeText={(text) => setUser({ value: text, error: "" })}
+        onChangeText={(text) => setUser({ value: "", error: "" })}
         error={!!user.error}
         errorText={user.error}
-        autoCapitalize="none"
-        autoCompleteType="usuario"
-        textContentType="usuario"
-        keyboardType="usuario"
         style={styles.input}
       />
 
@@ -50,7 +59,7 @@ export const RegisterScreen = ({}) => {
         label="Senha"
         returnKeyType="done"
         value={password.value}
-        onChangeText={(text) => setPassword({ value: text, error: "" })}
+        onChangeText={(text) => setPassword({ value: "", error: "" })}
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
@@ -61,7 +70,7 @@ export const RegisterScreen = ({}) => {
         label="Confirmar senha"
         returnKeyType="done"
         value={confirmpassword.value}
-        onChangeText={(text) => setConfirmPassword({ value: text, error: "" })}
+        onChangeText={(text) => setConfirmPassword({ value: "", error: "" })}
         error={!!confirmpassword.error}
         errorText={confirmpassword.error}
         secureTextEntry
@@ -83,6 +92,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 26,
     flex: 1,
     justifyContent: "center",
+    backgroundColor: "#93BFB7",
   },
   input: {
     width: "75%",
