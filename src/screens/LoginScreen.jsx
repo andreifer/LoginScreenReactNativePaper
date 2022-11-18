@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { Button, HelperText, TextInput } from "react-native-paper";
 
 export const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState({ value: "", error: "" });
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 26,
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#93BFB7"
+    backgroundColor: "#93BFB7",
   },
   esqueceuSenha: {
     width: "100%",
