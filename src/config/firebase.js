@@ -6,15 +6,14 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAQbfwqgJ0NkKdgLeZXrUheH4ADjCDeMnM",
-  authDomain: "aulalogin-a6767.firebaseapp.com",
-  projectId: "aulalogin-a6767",
-  storageBucket: "aulalogin-a6767.appspot.com",
-  messagingSenderId: "636294210270",
-  appId: "1:636294210270:web:da64d77c1358c4919ad84f",
+  apiKey: "AIzaSyD3uiyu5OvHtCWu4V9ZbokLlFhdskK-XHg",
+  authDomain: "aulaloginoficial.firebaseapp.com",
+  projectId: "aulaloginoficial",
+  storageBucket: "aulaloginoficial.appspot.com",
+  messagingSenderId: "834976627685",
+  appId: "1:834976627685:web:370b205bd4e9ce6c1c0d0c"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
 export const auth = getAuth(app);

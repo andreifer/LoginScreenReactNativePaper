@@ -11,27 +11,34 @@ export const RootNavigation = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="LoginScreen"
+        name="Inicial"
         component={LoginScreen}
-        options={{ headerShown: false, title: "Tela de Login" }}
+        options={{
+          headerShown: false,
+          title: "Tela de Login",
+        }}
       />
       <Stack.Screen
         name="RegisterScreen"
         component={RegisterScreen}
-        options={{ headerShown: false, title: "Tela de Cadastro" }}
+        options={{
+          headerShown: false,
+          title: "Tela de Login",
+        }}
       />
       <Stack.Screen
         name="HomeNavigation"
         component={TabNavigation}
-        options={{ headerShown: false, title: "Tela inicial" }}
+        options={{
+          headerShown: false,
+          title: "Tela do aplicativo",
+        }}
       />
-      
     </Stack.Navigator>
   );
 };
 
 const Tab = createMaterialBottomTabNavigator();
-
 export const TabNavigation = () => {
   return (
     <Tab.Navigator>
@@ -41,7 +48,7 @@ export const TabNavigation = () => {
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={25} />
+            <MaterialCommunityIcons name="home" color={color} size={26} />
           ),
         }}
       />
@@ -50,3 +57,4 @@ export const TabNavigation = () => {
     </Tab.Navigator>
   );
 };
+

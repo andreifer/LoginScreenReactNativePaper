@@ -1,36 +1,49 @@
-import { StyleSheet, View } from "react-native";
-import React, { useState } from "react";
-import { Button, HelperText, TextInput } from "react-native-paper";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import React, { useState } from "react";
+import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
+import { Button, HelperText, TextInput } from "react-native-paper";
 import { auth } from "../config/firebase";
 
-export const RegisterScreen = ({}) => {
-  const [email, setEmail] = useState({ value: "", error: "" });
-  const [password, setPassword] = useState({ value: "", error: "" });
-  const [user, setUser] = useState({ value: "", error: "" });
-  const [confirmpassword, setConfirmPassword] = useState({
+export const RegisterScreen = ({ navigation }) => {
+  const [nome, setNome] = useState({
+    value: "",
+    error: "",
+  });
+  const [email, setEmail] = useState({
+    value: "",
+    error: "",
+  });
+  const [password, setPassword] = useState({
+    value: "",
+    error: "",
+  });
+  const [confirmaPassword, setConfirmaPassword] = useState({
     value: "",
     error: "",
   });
 
-  const _onRegisterPressed = () => {
+  const [mostraErro, setMostraErro] = useState("");
+
+  const _onLoginPressed = () => {
     console.log("RegistroIniciado");
     let erro = false;
-    // navigation.navigate("Dashboard");
-    if (email.value === "") {
-      setEmail({ ...email, error: "Entre com um e=mail válido" });
+    if (nome.value === "") {
+      setNome({ ...nome, error: "Entre com o seu nome maravilhoso" });
       erro = true;
     }
-    if (user.value === "") {
-      setUser({ ...user, error: "Entre com um usuário valido" });
+    if (email.value === "") {
+      setEmail({ ...email, error: "Entre com um e-mail válido" });
       erro = true;
     }
     if (password.value === "") {
-      setPassword({ ...password, error: "Senha é obrigatório" });
+      setPassword({ ...password, error: "Entre com uma senha" });
       erro = true;
     }
-    if (confirmpassword.value === "") {
-      setConfirmPassword({ ...confirmpassword, error: "Confirme sua senha" });
+    if (confirmaPassword.value === "") {
+      setConfirmaPassword({
+        ...confirmaPassword,
+        error: "Repita sua senha",
+      });
       erro = true;
     }
     if (!erro) {
@@ -39,38 +52,52 @@ export const RegisterScreen = ({}) => {
   };
 
   async function CadastrarUsuario() {
-    await createUserWithEmailAndPassword(auth, email.value, password.value, user.value, confirmpassword.value)
+    await createUserWithEmailAndPassword(auth, email.value, password.value)
       .then((value) => {
         console.log("Cadastrado com sucesso!" + value.user.uid);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => lidarComErro(error.code));
+  }
+
+  function lidarComErro(erro) {
+    if (erro == "auth/weak/password"){
+      setMostraErro("Senha fraca");
+    }
   }
 
   return (
     <View style={styles.container}>
+      <Text>Cadastro</Text>
       <TextInput
-        label="Email"
+        label="Nome Completo"
+        value={nome.value}
+        onChangeText={(text) => setNome({ value: text, error: "" })}
+        error={!!nome.error}
+        errorText={nome.error}
+        style={styles.input}
+        /* não essenciais  */
         returnKeyType="next"
+        textContentType="givenName"
+        keyboardType="default"
+      />
+      <HelperText type="error" visible={!!nome.error}>
+        {nome.error}
+      </HelperText>
+      <TextInput
+        label="Digite seu E-mail"
         value={email.value}
         onChangeText={(text) => setEmail({ value: text, error: "" })}
         error={!!email.error}
         errorText={email.error}
         style={styles.input}
+        /* não essenciais  */
+        returnKeyType="next"
+        autoCompleteType="email"
+        textContentType="emailAddress"
+        keyboardType="email-address"
       />
       <HelperText type="error" visible={!!email.error}>
-        Digite um email válido
-      </HelperText>
-      <TextInput
-        label="Usuário"
-        returnKeyType="next"
-        value={user.value}
-        onChangeText={(text) => setUser({ value: text, error: "" })}
-        error={!!user.error}
-        errorText={user.error}
-        style={styles.input}
-      />
-      <HelperText type="error" visible={!!user.error}>
-        Digite um usuário
+        {email.error}
       </HelperText>
       <TextInput
         label="Senha"
@@ -83,24 +110,37 @@ export const RegisterScreen = ({}) => {
         style={styles.input}
       />
       <HelperText type="error" visible={!!password.error}>
-        Digite uma Senha
+        {password.error}
       </HelperText>
       <TextInput
-        label="Confirmar senha"
+        label="Confirme sua Senha"
         returnKeyType="done"
-        value={confirmpassword.value}
-        onChangeText={(text) => setConfirmPassword({ value: text, error: "" })}
-        error={!!confirmpassword.error}
-        errorText={confirmpassword.error}
+        value={confirmaPassword.value}
+        onChangeText={(text) => setConfirmaPassword({ value: text, error: "" })}
+        error={!!confirmaPassword.error}
+        errorText={confirmaPassword.error}
         secureTextEntry
         style={styles.input}
       />
-      <HelperText type="error" visible={!!confirmpassword.error}>
-        Digite sua senha novamente
+      <HelperText type="error" visible={!!confirmaPassword.error}>
+        {confirmaPassword.error}
       </HelperText>
-      <Button mode="contained" onPress={_onRegisterPressed} style={styles.but}>
+      <View style={styles.esqueceuSenha}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("EsqueceuSenhaScreen")}
+        >
+          <Text style={styles.label}>Esqueceu sua senha?</Text>
+        </TouchableOpacity>
+      </View>
+      <Button mode="contained" onPress={_onLoginPressed}>
         Cadastrar
       </Button>
+      <View style={styles.row}>
+        {/* <Text style={styles.label}>Não possui uma conta? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("RegisterScreen")}>
+          <Text style={styles.link}>Cadastrar</Text>
+        </TouchableOpacity> */}
+      </View>
     </View>
   );
 };
@@ -113,16 +153,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 26,
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "#93BFB7",
+    backgroundColor: "lightblue"
+  },
+  esqueceuSenha: {
+    width: "100%",
+    alignItems: "flex-end",
+    marginBottom: 24,
+  },
+  row: {
+    flexDirection: "row",
+    marginTop: 4,
   },
   input: {
-    width: "75%",
-    marginTop: 10,
+    width: "100%",
   },
   label: {
     color: "black",
   },
-  but: {
-    marginTop: 10,
+  link: {
+    fontWeight: "bold",
+    color: "black",
   },
 });
