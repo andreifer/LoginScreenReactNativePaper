@@ -24,7 +24,7 @@ export const RegisterScreen = ({ navigation }) => {
 
   const [mostraErro, setMostraErro] = useState("");
 
-  const _onLoginPressed = () => {
+  const _onRegisterPressed = () => {
     console.log("RegistroIniciado");
     let erro = false;
     if (nome.value === "") {
@@ -44,8 +44,11 @@ export const RegisterScreen = ({ navigation }) => {
         ...confirmaPassword,
         error: "Repita sua senha",
       });
-      erro = true;
-    }
+      
+    } 
+    if (confirmaPassword.value != password.value) { 
+    erro = true;
+  }
     if (!erro) {
       CadastrarUsuario();
     }
@@ -55,19 +58,30 @@ export const RegisterScreen = ({ navigation }) => {
     await createUserWithEmailAndPassword(auth, email.value, password.value)
       .then((value) => {
         console.log("Cadastrado com sucesso!" + value.user.uid);
+        navigation.navigate('Inicial');
       })
       .catch((error) => lidarComErro(error.code));
   }
-
   function lidarComErro(erro) {
-    if (erro == "auth/weak/password"){
+    if (erro == "auth/weak-password") {
       setMostraErro("Senha fraca");
+      return;
     }
+    if (erro == "auth/credential-already-in-use") {
+      setMostraErro("Email cadastrado");
+      return;
+    }
+    if (erro == "auth/invalid-email") {
+      setMostraErro("Email invalido");
+      return;
+    }
+    setMostraErro(erro);
   }
 
   return (
     <View style={styles.container}>
       <Text>Cadastro</Text>
+      <HelperText type="error">{mostraErro}</HelperText>
       <TextInput
         label="Nome Completo"
         value={nome.value}
@@ -132,15 +146,9 @@ export const RegisterScreen = ({ navigation }) => {
           <Text style={styles.label}>Esqueceu sua senha?</Text>
         </TouchableOpacity>
       </View>
-      <Button mode="contained" onPress={_onLoginPressed}>
+      <Button mode="contained" onPress={_onRegisterPressed}>
         Cadastrar
       </Button>
-      <View style={styles.row}>
-        {/* <Text style={styles.label}>Não possui uma conta? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("RegisterScreen")}>
-          <Text style={styles.link}>Cadastrar</Text>
-        </TouchableOpacity> */}
-      </View>
     </View>
   );
 };
@@ -153,7 +161,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 26,
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "lightblue"
+    backgroundColor: "lightblue",
   },
   esqueceuSenha: {
     width: "100%",
