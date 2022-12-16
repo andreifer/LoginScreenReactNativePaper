@@ -2,6 +2,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { TouchableOpacity, Text, View } from "react-native";
 import { Button, HelperText, TextInput } from "react-native-paper";
+import { Image } from "react-native-web";
 import { auth } from "../config/firebase";
 import { styles } from "../config/styles";
 
@@ -52,6 +53,11 @@ export const LoginScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+       <Image
+        source={{ uri: require("../../assets/nike.jpg") }}
+        style={{ width: 200, height: 200, marginBottom: 20 }}
+        resizeMode="contain"
+      />
       {mensagem && <HelperText type="info">{mensagem}</HelperText>}
       <HelperText type="error">{mostraErro}</HelperText>
       <TextInput
