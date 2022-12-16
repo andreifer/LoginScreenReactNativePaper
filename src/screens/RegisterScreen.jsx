@@ -1,10 +1,12 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity, Text, View } from "react-native";
 import { Button, HelperText, TextInput } from "react-native-paper";
 import { auth } from "../config/firebase";
+import { styles } from "../config/styles";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export const RegisterScreen = ({ navigation }) => {
+  const [mostraErro, setMostraErro] = useState("");
   const [nome, setNome] = useState({
     value: "",
     error: "",
@@ -22,9 +24,7 @@ export const RegisterScreen = ({ navigation }) => {
     error: "",
   });
 
-  const [mostraErro, setMostraErro] = useState("");
-
-  const _onRegisterPressed = () => {
+  function onRegisterPressed() {
     console.log("RegistroIniciado");
     let erro = false;
     if (nome.value === "") {
@@ -44,35 +44,38 @@ export const RegisterScreen = ({ navigation }) => {
         ...confirmaPassword,
         error: "Repita sua senha",
       });
-      
-    } 
-    if (confirmaPassword.value != password.value) { 
-    erro = true;
-  }
-    if (!erro) {
-      CadastrarUsuario();
+      erro = true;
     }
-  };
-
-  async function CadastrarUsuario() {
-    await createUserWithEmailAndPassword(auth, email.value, password.value)
-      .then((value) => {
-        console.log("Cadastrado com sucesso!" + value.user.uid);
-        navigation.navigate('Inicial');
-      })
-      .catch((error) => lidarComErro(error.code));
+    if (confirmaPassword.value != password.value) {
+      erro = true;
+      setConfirmaPassword({
+        ...confirmaPassword,
+        error: "Senhas não conferem",
+      });
+    }
+    if (!erro) {
+      createUserWithEmailAndPassword(auth, email.value, password.value)
+        .then((value) => {
+          console.log("Cadastrado com sucesso! " + value.user.uid);
+          navigation.navigate("Inicial", {
+            mensagem: "Você se registrou com muito sucesso! 💋",
+          });
+        })
+        .catch((error) => lidarComErro(error.code));
+    }
   }
+
   function lidarComErro(erro) {
     if (erro == "auth/weak-password") {
-      setMostraErro("Senha fraca");
+      setMostraErro("Senha muito Fraquinha");
       return;
     }
     if (erro == "auth/credential-already-in-use") {
-      setMostraErro("Email cadastrado");
+      setMostraErro("E-mail já cadastrado");
       return;
     }
     if (erro == "auth/invalid-email") {
-      setMostraErro("Email invalido");
+      setMostraErro("E-mail inválido");
       return;
     }
     setMostraErro(erro);
@@ -141,45 +144,17 @@ export const RegisterScreen = ({ navigation }) => {
       </HelperText>
       <View style={styles.esqueceuSenha}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("EsqueceuSenhaScreen")}
+          onPress={() => navigation.navigate("ForgotPasswordScreen")}
         >
           <Text style={styles.label}>Esqueceu sua senha?</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("LoginScreen")}>
+          <Text style={styles.label}>Fazer login</Text>
+        </TouchableOpacity>
       </View>
-      <Button mode="contained" onPress={_onRegisterPressed}>
+      <Button mode="contained" onPress={onRegisterPressed}>
         Cadastrar
       </Button>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    alignItems: "center",
-    marginBottom: 24,
-    paddingHorizontal: 26,
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "lightblue",
-  },
-  esqueceuSenha: {
-    width: "100%",
-    alignItems: "flex-end",
-    marginBottom: 24,
-  },
-  row: {
-    flexDirection: "row",
-    marginTop: 4,
-  },
-  input: {
-    width: "100%",
-  },
-  label: {
-    color: "black",
-  },
-  link: {
-    fontWeight: "bold",
-    color: "black",
-  },
-});
