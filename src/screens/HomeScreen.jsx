@@ -4,7 +4,7 @@ import { Paragraph } from "react-native-paper";
 export const HomeScreen = () => {
   return (
     <View>
-      <Paragraph>Seja bem vindx!</Paragraph>
+      <Paragraph>Seja bem vindo!</Paragraph>
     </View>
   );
 };
