@@ -5,8 +5,11 @@ import { LoginScreen } from "../screens/LoginScreen";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import { ForgotPasswordScreen } from "../screens/ForgotPassword";
+import { CameraScreen } from "../screens/CameraScreen";
+import { TelefoneScreen } from "../screens/TelefoneScreen";
 
 const Stack = createStackNavigator();
+const MaterialBottomTabs = createMaterialBottomTabNavigator(); 
 
 export const RootNavigation = () => {
   return (
@@ -43,6 +46,22 @@ export const RootNavigation = () => {
           title: "Tela do aplicativo",
         }}
       />
+      <Stack.Screen
+        name="CameraScreen"
+        component={CameraScreen}
+        options={{
+          headerShown: false,
+          title: "Tela do aplicativo",
+        }}
+      />
+      <Stack.Screen
+        name="TelefoneScreen"
+        component={TelefoneScreen}
+        options={{
+          headerShown: false,
+          title: "Tela do aplicativo",
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -61,8 +80,26 @@ export const TabNavigation = () => {
           ),
         }}
       />
-      <Tab.Screen name="Home2" component={HomeScreen} />
-      <Tab.Screen name="Home3" component={HomeScreen} />
+      <Tab.Screen
+        name="Câmera"
+        component={CameraScreen}
+        options={{
+          tabBarLabel: "Câmera",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="camera" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Telefone"
+        component={TelefoneScreen}
+        options={{
+          tabBarLabel: "Telefone",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="phone" color={color} size={26} />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
