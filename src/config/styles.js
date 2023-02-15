@@ -31,6 +31,6 @@ export const styles = StyleSheet.create({
   },
   link: {
     fontWeight: "bold",
-    color: "black",
+    color: "white",
   },
 });
